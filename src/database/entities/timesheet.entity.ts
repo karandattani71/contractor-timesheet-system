@@ -72,4 +72,4 @@ export class Timesheet {
   get isEditable(): boolean {
     return this.status === TimesheetStatus.PENDING;
   }
-} 
+}

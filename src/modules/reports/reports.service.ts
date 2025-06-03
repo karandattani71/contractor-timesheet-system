@@ -14,7 +14,7 @@ export class ReportsService {
 
   async exportTimesheets(format: 'csv' | 'json'): Promise<string> {
     this.logger.log(`Exporting timesheets in ${format.toUpperCase()} format`);
-    
+
     const timesheets = await this.timesheetsRepository.find({
       relations: ['contractor'],
       order: { createdAt: 'DESC' },
@@ -28,7 +28,7 @@ export class ReportsService {
   }
 
   private exportAsJson(timesheets: Timesheet[]): string {
-    const exportData = timesheets.map(timesheet => ({
+    const exportData = timesheets.map((timesheet) => ({
       id: timesheet.id,
       contractorName: timesheet.contractor.fullName,
       contractorEmail: timesheet.contractor.email,
@@ -68,7 +68,7 @@ export class ReportsService {
 
     const csvRows = [headers.join(',')];
 
-    timesheets.forEach(timesheet => {
+    timesheets.forEach((timesheet) => {
       const row = [
         timesheet.id,
         `"${timesheet.contractor.fullName}"`,
@@ -90,4 +90,4 @@ export class ReportsService {
 
     return csvRows.join('\n');
   }
-} 
+}

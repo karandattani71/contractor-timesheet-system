@@ -1,4 +1,11 @@
-import { IsString, IsNumber, IsOptional, IsDateString, Min, Max } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsDateString,
+  Min,
+  Max,
+} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
@@ -24,7 +31,8 @@ export class CreateTimesheetDto {
 
   @ApiPropertyOptional({
     description: 'Optional notes about the work done',
-    example: 'Completed user authentication module and started on payment integration',
+    example:
+      'Completed user authentication module and started on payment integration',
   })
   @IsOptional()
   @IsString()
@@ -43,4 +51,4 @@ export class CreateTimesheetDto {
   })
   @IsDateString()
   weekEndDate: string;
-} 
+}

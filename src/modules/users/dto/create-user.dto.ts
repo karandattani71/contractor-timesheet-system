@@ -1,4 +1,11 @@
-import { IsEmail, IsString, IsEnum, IsOptional, IsArray, IsUUID } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  IsEnum,
+  IsOptional,
+  IsArray,
+  IsUUID,
+} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserRole } from '../../../database/entities';
 
@@ -49,4 +56,4 @@ export class CreateUserDto {
   @IsArray()
   @IsUUID(4, { each: true })
   managedContractorIds?: string[];
-} 
+}

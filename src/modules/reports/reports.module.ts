@@ -9,4 +9,4 @@ import { Timesheet } from '../../database/entities';
   controllers: [ReportsController],
   providers: [ReportsService],
 })
-export class ReportsModule {} 
+export class ReportsModule {}

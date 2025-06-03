@@ -27,7 +27,9 @@ async function bootstrap() {
   // Swagger configuration
   const config = new DocumentBuilder()
     .setTitle('Contractor Timesheet System API')
-    .setDescription('A comprehensive API for managing contractor timesheets with role-based access control')
+    .setDescription(
+      'A comprehensive API for managing contractor timesheets with role-based access control',
+    )
     .setVersion('1.0')
     .addBearerAuth()
     .addTag('Authentication', 'User authentication and authorization')
@@ -47,7 +49,9 @@ async function bootstrap() {
   await app.listen(port);
 
   logger.log(`🚀 Application is running on: http://localhost:${port}`);
-  logger.log(`📚 Swagger documentation available at: http://localhost:${port}/api/docs`);
+  logger.log(
+    `📚 Swagger documentation available at: http://localhost:${port}/api/docs`,
+  );
   logger.log(`🔧 Environment: ${configService.get<string>('NODE_ENV')}`);
 }
 

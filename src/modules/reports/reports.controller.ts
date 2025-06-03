@@ -1,5 +1,11 @@
 import { Controller, Get, Query, UseGuards, Res } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { Response } from 'express';
 import { ReportsService } from './reports.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -35,24 +41,33 @@ export class ReportsController {
       },
     },
   })
-  @ApiResponse({ status: 403, description: 'Forbidden - Admin access required' })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Admin access required',
+  })
   async exportTimesheets(
     @Query('format') format: 'csv' | 'json' = 'csv',
     @Res() res: Response,
   ) {
     const data = await this.reportsService.exportTimesheets(format);
-    
+
     const timestamp = new Date().toISOString().split('T')[0];
     const filename = `timesheets-export-${timestamp}.${format}`;
-    
+
     if (format === 'csv') {
       res.setHeader('Content-Type', 'text/csv');
-      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="${filename}"`,
+      );
     } else {
       res.setHeader('Content-Type', 'application/json');
-      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="${filename}"`,
+      );
     }
-    
+
     res.send(data);
   }
-} 
+}

@@ -19,4 +19,4 @@ export class RejectTimesheetDto {
   @IsOptional()
   @IsString()
   rejectionReason?: string;
-} 
+}

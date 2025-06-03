@@ -63,4 +63,4 @@ export class PaginationResponseDto<T> {
       hasPreviousPage: page > 1,
     };
   }
-} 
+}

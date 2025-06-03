@@ -58,4 +58,4 @@ export class User {
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }
-} 
+}

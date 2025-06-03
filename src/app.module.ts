@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { TimesheetsModule } from './modules/timesheets/timesheets.module';
 import { ReportsModule } from './modules/reports/reports.module';
+import { SeedModule } from './database/seeds/seed.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ReportsModule } from './modules/reports/reports.module';
     UsersModule,
     TimesheetsModule,
     ReportsModule,
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],

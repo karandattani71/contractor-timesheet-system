@@ -10,4 +10,4 @@ import { Timesheet, User } from '../../database/entities';
   providers: [TimesheetsService],
   exports: [TimesheetsService],
 })
-export class TimesheetsModule {} 
+export class TimesheetsModule {}

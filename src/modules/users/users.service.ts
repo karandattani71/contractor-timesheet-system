@@ -4,7 +4,10 @@ import { Repository } from 'typeorm';
 import { User, UserRole } from '../../database/entities';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PaginationQueryDto, PaginationResponseDto } from '../../common/dto/pagination.dto';
+import {
+  PaginationQueryDto,
+  PaginationResponseDto,
+} from '../../common/dto/pagination.dto';
 
 @Injectable()
 export class UsersService {
@@ -21,7 +24,9 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async findAll(paginationQuery: PaginationQueryDto): Promise<PaginationResponseDto<User>> {
+  async findAll(
+    paginationQuery: PaginationQueryDto,
+  ): Promise<PaginationResponseDto<User>> {
     const { page = 1, limit = 10 } = paginationQuery;
     const skip = (page - 1) * limit;
 
@@ -73,4 +78,4 @@ export class UsersService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
   }
-} 
+}

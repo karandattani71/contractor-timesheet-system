@@ -16,4 +16,4 @@ export const getDatabaseConfig = (
   synchronize: configService.get<string>('NODE_ENV') === 'development',
   logging: configService.get<string>('NODE_ENV') === 'development',
   ssl: configService.get<string>('NODE_ENV') === 'production',
-}); 
+});

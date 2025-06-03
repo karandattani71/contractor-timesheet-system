@@ -1,11 +1,28 @@
-import { Injectable, NotFoundException, ForbiddenException, BadRequestException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
+  Logger,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
-import { Timesheet, TimesheetStatus, User, UserRole } from '../../database/entities';
+import {
+  Timesheet,
+  TimesheetStatus,
+  User,
+  UserRole,
+} from '../../database/entities';
 import { CreateTimesheetDto } from './dto/create-timesheet.dto';
 import { UpdateTimesheetDto } from './dto/update-timesheet.dto';
-import { ApproveTimesheetDto, RejectTimesheetDto } from './dto/approve-timesheet.dto';
-import { PaginationQueryDto, PaginationResponseDto } from '../../common/dto/pagination.dto';
+import {
+  ApproveTimesheetDto,
+  RejectTimesheetDto,
+} from './dto/approve-timesheet.dto';
+import {
+  PaginationQueryDto,
+  PaginationResponseDto,
+} from '../../common/dto/pagination.dto';
 
 @Injectable()
 export class TimesheetsService {
@@ -18,9 +35,12 @@ export class TimesheetsService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async create(createTimesheetDto: CreateTimesheetDto, contractorId: string): Promise<Timesheet> {
+  async create(
+    createTimesheetDto: CreateTimesheetDto,
+    contractorId: string,
+  ): Promise<Timesheet> {
     this.logger.log(`Creating timesheet for contractor: ${contractorId}`);
-    
+
     // Check if timesheet already exists for this week
     const existingTimesheet = await this.timesheetsRepository.findOne({
       where: {
@@ -44,7 +64,10 @@ export class TimesheetsService {
     return this.timesheetsRepository.save(timesheet);
   }
 
-  async findAll(paginationQuery: PaginationQueryDto, user: User): Promise<PaginationResponseDto<Timesheet>> {
+  async findAll(
+    paginationQuery: PaginationQueryDto,
+    user: User,
+  ): Promise<PaginationResponseDto<Timesheet>> {
     const { page = 1, limit = 10 } = paginationQuery;
     const skip = (page - 1) * limit;
 
@@ -66,7 +89,9 @@ export class TimesheetsService {
       order: { createdAt: 'DESC' },
     });
 
-    this.logger.log(`Retrieved ${timesheets.length} timesheets for user ${user.email} (page ${page})`);
+    this.logger.log(
+      `Retrieved ${timesheets.length} timesheets for user ${user.email} (page ${page})`,
+    );
     return new PaginationResponseDto(timesheets, total, page, limit);
   }
 
@@ -81,22 +106,37 @@ export class TimesheetsService {
     }
 
     // Check access permissions
-    if (user.role === UserRole.CONTRACTOR && timesheet.contractorId !== user.id) {
+    if (
+      user.role === UserRole.CONTRACTOR &&
+      timesheet.contractorId !== user.id
+    ) {
       throw new ForbiddenException('You can only access your own timesheets');
     }
 
-    if (user.role === UserRole.RECRUITER && !user.managedContractorIds.includes(timesheet.contractorId)) {
-      throw new ForbiddenException('You can only access timesheets of contractors you manage');
+    if (
+      user.role === UserRole.RECRUITER &&
+      !user.managedContractorIds.includes(timesheet.contractorId)
+    ) {
+      throw new ForbiddenException(
+        'You can only access timesheets of contractors you manage',
+      );
     }
 
     return timesheet;
   }
 
-  async update(id: string, updateTimesheetDto: UpdateTimesheetDto, user: User): Promise<Timesheet> {
+  async update(
+    id: string,
+    updateTimesheetDto: UpdateTimesheetDto,
+    user: User,
+  ): Promise<Timesheet> {
     const timesheet = await this.findOne(id, user);
 
     // Only contractors can update their own timesheets and only if pending
-    if (user.role !== UserRole.CONTRACTOR || timesheet.contractorId !== user.id) {
+    if (
+      user.role !== UserRole.CONTRACTOR ||
+      timesheet.contractorId !== user.id
+    ) {
       throw new ForbiddenException('You can only update your own timesheets');
     }
 
@@ -105,17 +145,25 @@ export class TimesheetsService {
     }
 
     this.logger.log(`Updating timesheet ${id} by contractor ${user.id}`);
-    
+
     await this.timesheetsRepository.update(id, {
       ...updateTimesheetDto,
-      weekStartDate: updateTimesheetDto.weekStartDate ? new Date(updateTimesheetDto.weekStartDate) : undefined,
-      weekEndDate: updateTimesheetDto.weekEndDate ? new Date(updateTimesheetDto.weekEndDate) : undefined,
+      weekStartDate: updateTimesheetDto.weekStartDate
+        ? new Date(updateTimesheetDto.weekStartDate)
+        : undefined,
+      weekEndDate: updateTimesheetDto.weekEndDate
+        ? new Date(updateTimesheetDto.weekEndDate)
+        : undefined,
     });
 
     return this.findOne(id, user);
   }
 
-  async approve(id: string, approveDto: ApproveTimesheetDto, user: User): Promise<Timesheet> {
+  async approve(
+    id: string,
+    approveDto: ApproveTimesheetDto,
+    user: User,
+  ): Promise<Timesheet> {
     const timesheet = await this.findOne(id, user);
 
     if (user.role !== UserRole.RECRUITER) {
@@ -138,7 +186,11 @@ export class TimesheetsService {
     return this.findOne(id, user);
   }
 
-  async reject(id: string, rejectDto: RejectTimesheetDto, user: User): Promise<Timesheet> {
+  async reject(
+    id: string,
+    rejectDto: RejectTimesheetDto,
+    user: User,
+  ): Promise<Timesheet> {
     const timesheet = await this.findOne(id, user);
 
     if (user.role !== UserRole.RECRUITER) {
@@ -163,7 +215,10 @@ export class TimesheetsService {
     const timesheet = await this.findOne(id, user);
 
     // Only contractors can delete their own pending timesheets
-    if (user.role !== UserRole.CONTRACTOR || timesheet.contractorId !== user.id) {
+    if (
+      user.role !== UserRole.CONTRACTOR ||
+      timesheet.contractorId !== user.id
+    ) {
       throw new ForbiddenException('You can only delete your own timesheets');
     }
 
@@ -174,4 +229,4 @@ export class TimesheetsService {
     this.logger.log(`Deleting timesheet ${id} by contractor ${user.id}`);
     await this.timesheetsRepository.delete(id);
   }
-} 
+}

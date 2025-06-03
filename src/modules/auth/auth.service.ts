@@ -16,24 +16,24 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     this.logger.log(`Login attempt for email: ${loginDto.email}`);
-    
+
     // In a real implementation, you would validate against Keycloak here
     // For this demo, we'll do a simple email/password check
     const user = await this.usersService.findByEmail(loginDto.email);
-    
+
     if (!user || !user.isActive) {
       this.logger.warn(`Login failed for email: ${loginDto.email}`);
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { 
-      email: user.email, 
+    const payload = {
+      email: user.email,
       sub: user.keycloakId || user.id,
-      role: user.role 
+      role: user.role,
     };
 
     this.logger.log(`Login successful for user: ${user.email}`);
-    
+
     return {
       access_token: this.jwtService.sign(payload),
       user: {
@@ -49,4 +49,4 @@ export class AuthService {
   async validateUser(keycloakId: string) {
     return this.usersService.findByKeycloakId(keycloakId);
   }
-} 
+}

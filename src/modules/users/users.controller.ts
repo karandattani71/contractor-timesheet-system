@@ -9,7 +9,12 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -30,14 +35,19 @@ export class UsersController {
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Create a new user (Admin only)' })
   @ApiResponse({ status: 201, description: 'User created successfully' })
-  @ApiResponse({ status: 403, description: 'Forbidden - Admin access required' })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Admin access required',
+  })
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
   @Roles(UserRole.ADMIN, UserRole.RECRUITER)
-  @ApiOperation({ summary: 'Get all users with pagination (Admin/Recruiter only)' })
+  @ApiOperation({
+    summary: 'Get all users with pagination (Admin/Recruiter only)',
+  })
   @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
   findAll(@Query() paginationQuery: PaginationQueryDto) {
     return this.usersService.findAll(paginationQuery);
@@ -69,4 +79,4 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
-} 
+}
