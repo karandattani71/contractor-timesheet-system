@@ -35,14 +35,14 @@ export class ReportsService {
       projectName: timesheet.projectName,
       hoursWorked: timesheet.hoursWorked,
       notes: timesheet.notes,
-      weekStartDate: timesheet.weekStartDate,
-      weekEndDate: timesheet.weekEndDate,
+      weekStartDate: this.formatDate(timesheet.weekStartDate),
+      weekEndDate: this.formatDate(timesheet.weekEndDate),
       status: timesheet.status,
       approvedBy: timesheet.approvedBy,
-      approvedAt: timesheet.approvedAt,
+      approvedAt: timesheet.approvedAt ? this.formatDateTime(timesheet.approvedAt) : null,
       rejectionReason: timesheet.rejectionReason,
-      createdAt: timesheet.createdAt,
-      updatedAt: timesheet.updatedAt,
+      createdAt: this.formatDateTime(timesheet.createdAt),
+      updatedAt: this.formatDateTime(timesheet.updatedAt),
     }));
 
     return JSON.stringify(exportData, null, 2);
@@ -76,18 +76,58 @@ export class ReportsService {
         `"${timesheet.projectName}"`,
         timesheet.hoursWorked,
         `"${timesheet.notes || ''}"`,
-        timesheet.weekStartDate.toISOString().split('T')[0],
-        timesheet.weekEndDate.toISOString().split('T')[0],
+        this.formatDate(timesheet.weekStartDate),
+        this.formatDate(timesheet.weekEndDate),
         timesheet.status,
         timesheet.approvedBy || '',
-        timesheet.approvedAt ? timesheet.approvedAt.toISOString() : '',
+        timesheet.approvedAt ? this.formatDateTime(timesheet.approvedAt) : '',
         `"${timesheet.rejectionReason || ''}"`,
-        timesheet.createdAt.toISOString(),
-        timesheet.updatedAt.toISOString(),
+        this.formatDateTime(timesheet.createdAt),
+        this.formatDateTime(timesheet.updatedAt),
       ];
       csvRows.push(row.join(','));
     });
 
     return csvRows.join('\n');
+  }
+
+  /**
+   * Helper method to format date fields (handles both Date objects and string dates)
+   */
+  private formatDate(dateValue: Date | string): string {
+    if (!dateValue) return '';
+    
+    if (dateValue instanceof Date) {
+      return dateValue.toISOString().split('T')[0];
+    }
+    
+    // If it's a string, try to parse it
+    const date = new Date(dateValue);
+    if (isNaN(date.getTime())) {
+      // If parsing fails, return the original string
+      return String(dateValue);
+    }
+    
+    return date.toISOString().split('T')[0];
+  }
+
+  /**
+   * Helper method to format datetime fields (handles both Date objects and string dates)
+   */
+  private formatDateTime(dateValue: Date | string): string {
+    if (!dateValue) return '';
+    
+    if (dateValue instanceof Date) {
+      return dateValue.toISOString();
+    }
+    
+    // If it's a string, try to parse it
+    const date = new Date(dateValue);
+    if (isNaN(date.getTime())) {
+      // If parsing fails, return the original string
+      return String(dateValue);
+    }
+    
+    return date.toISOString();
   }
 }
