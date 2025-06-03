@@ -8,7 +8,7 @@ A comprehensive backend service for managing contractor timesheet submissions wi
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │                 │    │                 │    │                 │
 │   Frontend      │◄──►│   NestJS API    │◄──►│   PostgreSQL    │
-│   (Optional)    │    │   (Port 3000)   │    │   (Port 5432)   │
+│   (Optional)    │    │   (Port 3000)   │    │   (Port 5435)   │
 │                 │    │                 │    │                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
                               │
@@ -16,7 +16,7 @@ A comprehensive backend service for managing contractor timesheet submissions wi
                        ┌─────────────────┐
                        │                 │
                        │   Keycloak      │
-                       │   (Port 8080)   │
+                       │   (Port 9000)   │
                        │                 │
                        └─────────────────┘
 ```
@@ -95,7 +95,7 @@ npm run seed
 
 - **API**: http://localhost:3000
 - **Swagger Docs**: http://localhost:3000/api/docs
-- **Keycloak Admin**: http://localhost:8080 (admin/admin)
+- **Keycloak Admin**: http://localhost:9000 (admin/admin)
 
 ## 🔧 Development Setup
 
@@ -250,7 +250,7 @@ After running the seed script, you can use these test accounts:
 
 ### Realm Setup
 
-1. Access Keycloak Admin Console: http://localhost:8080
+1. Access Keycloak Admin Console: http://localhost:9000
 2. Login with admin/admin
 3. Create realm: `timesheet-realm`
 4. Create client: `timesheet-client`
@@ -344,12 +344,13 @@ This project is licensed under the MIT License.
 ### Common Issues
 
 1. **Database Connection Error**
-   - Ensure PostgreSQL is running
+   - Ensure PostgreSQL is running on port 5435
    - Check database credentials in .env
 
 2. **Keycloak Connection Error**
-   - Verify Keycloak is accessible
+   - Verify Keycloak is accessible on port 9000
    - Check realm and client configuration
+   - Make sure no other services are using port 9000
 
 3. **JWT Token Issues**
    - Ensure JWT_SECRET is set
